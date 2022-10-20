@@ -12,7 +12,7 @@ String line1="", line2="";
 WiFiClient espClient;
 
 int lastTime = 0, l1_lasttime = 0, l2_lasttime = 0, display_lasttime = 0;
-int WebTimerDelay = 15000, line1timer = 1000, line2timer = 1000, displayTimer = 1000;
+int WebTimerDelay = 15000, line1timer = 1000, line2timer = 1000, displayTimer = 1000, songTimer = 0;
 
 int state_l1 = 0, state_l2 = 0;
 int l1_pos1, l1_pos2;
@@ -52,15 +52,36 @@ void setup() {
   Serial.println(WiFi.localIP());
   WiFi.setAutoReconnect(true);
   WiFi.persistent(true);
+  sendHTTP();
   lastTime = millis();
+  song_lasttime = lastTime;
   l1_lasttime = lastTime;
   l2_lasttime = lastTime;
   display_lasttime = lastTime;
 }
 
 void loop() {
-  if ((millis() - lastTime) > WebTimerDelay) {
-    //Check WiFi connection status
+  if (((millis() - lastTime) > WebTimerDelay) || (((millis() - song_lasttime) > songTimer) && (songTime != 0))) {
+    sendHTTP();
+    lastTime = millis();
+  }
+  if ((millis() - l1_lasttime) > line1timer) {
+    set_text_l1();
+    l1_lasttime = millis();
+  }
+  if ((millis() - l2_lasttime) > line2timer) {
+    set_text_l2();
+    l2_lasttime = millis();
+  }
+  if ((millis() - display_lasttime) > displayTimer) {
+    update_display();
+    display_lasttime = millis();
+  }
+}
+
+// HTTP get function
+void sendHTTP(){
+      //Check WiFi connection status
     if (WiFi.status() == WL_CONNECTED) {
       HTTPClient http;
       http.useHTTP10(true);
@@ -91,20 +112,6 @@ void loop() {
     } else {
       Serial.println("WiFi Disconnected");
     }
-    lastTime = millis();
-  }
-  if ((millis() - l1_lasttime) > line1timer) {
-    set_text_l1();
-    l1_lasttime = millis();
-  }
-  if ((millis() - l2_lasttime) > line2timer) {
-    set_text_l2();
-    l2_lasttime = millis();
-  }
-  if ((millis() - display_lasttime) > displayTimer) {
-    update_display();
-    display_lasttime = millis();
-  }
 }
 
 // Json data related function
@@ -112,14 +119,14 @@ bool fetch_variable() {
   var.api_response = doc["api_response"];
   if (var.api_response != 200) return 1;
   var.timer = doc["timer"];
-  var.artists = "";
+  var.artists = doc["artist_string"].as<String>();
   var.device = doc["device_name"].as<String>();
   var.song_title = doc["song_title"].as<String>();
   var.status = doc["status"].as<String>();
   // var.device = doc["device_name"];
   // var.song_title = doc["song_title"];
   // var.status = doc["status"];
-  WebTimerDelay = var.timer + 5000;
+  songTimer = var.timer + 3000;
   Serial.print("web timer delay: ");
   Serial.println(WebTimerDelay);
   return 0;
@@ -137,16 +144,19 @@ String artist;
 void set_text_l1(){
   if (httpResponseCode != 200){
     line1timer = 1000;
+    songTimer = 0;
     line1 = "Not Connected";
     return;
   }
   if (var.api_response != 200){
     line1timer = 1000;
+    songTimer = 0;
     line1 = "Not Connected";
     return;
   }
   if (var.status == "False"){
     line1timer = 1000;
+    songTimer = 0;
     line1 = "PAUSED/STOP ON:";
     return;
   }
@@ -170,7 +180,7 @@ void set_text_l1(){
     case 1:
       line1timer = 1000;
       l1_pos1+=1;
-      if (var.artists.length()-1 > l1_pos2) l1_pos2+=1;
+      if (var.artists.length() > l1_pos2) l1_pos2+=1;
 
       artist = var.artists;
       artist.remove(l1_pos2);
@@ -223,7 +233,7 @@ void set_text_l2(){
       line2timer = 1000;
 
       l2_pos1+=1;
-      if (var.song_title.length()-1 > l2_pos2) l2_pos2++;
+      if (var.song_title.length() > l2_pos2) l2_pos2++;
 
       song = var.song_title;
       song.remove(l2_pos2);
