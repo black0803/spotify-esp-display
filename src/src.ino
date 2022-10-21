@@ -11,7 +11,7 @@ String line1="", line2="";
 
 WiFiClient espClient;
 
-int lastTime = 0, l1_lasttime = 0, l2_lasttime = 0, display_lasttime = 0;
+int lastTime = 0, l1_lasttime = 0, l2_lasttime = 0, display_lasttime = 0, song_lasttime = 0;
 int WebTimerDelay = 15000, line1timer = 1000, line2timer = 1000, displayTimer = 1000, songTimer = 0;
 
 int state_l1 = 0, state_l2 = 0;
@@ -61,7 +61,7 @@ void setup() {
 }
 
 void loop() {
-  if (((millis() - lastTime) > WebTimerDelay) || (((millis() - song_lasttime) > songTimer) && (songTime != 0))) {
+  if (((millis() - lastTime) > WebTimerDelay) || (((millis() - song_lasttime) > songTimer) && (songTimer != 0))) {
     sendHTTP();
     lastTime = millis();
   }
