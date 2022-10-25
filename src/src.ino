@@ -1,8 +1,10 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <ArduinoJson.h>
-#include <WiFi.h>
-#include <HTTPClient.h>
+// #include <WiFi.h>
+// #include <HTTPClient.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
 #include "env.h"
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -169,7 +171,7 @@ void set_text_l1(){
     case 0:
       line1timer = 3000;
       l1_pos1 = -1;
-      l1_pos2 = 8;
+      l1_pos2 = 10;
 
       artist = var.artists;
       artist.remove(l1_pos2);
@@ -222,7 +224,7 @@ void set_text_l2(){
     case 0:
       line2timer = 3000;
       l2_pos1 = -1;
-      l2_pos2 = 15;
+      l2_pos2 = 17;
       //line2 = var.song_title.substring(l1_pos1,l1_pos2);
       song = var.song_title;
       song.remove(l2_pos2);
