@@ -24,7 +24,7 @@
  ### How to use:
  - Copy ``env.h`` file from ``env-example.h``, and adjust the variables inside (``SSID``, ``PASSWORD``, ``WEB_SERVER``, and ``USER``) to suit your need.
  - If you are using ESP32, you will be using ``WiFi.h`` and ``HTTPClient.h``. However, ESP8266 users will be using ``ESP8266WiFi.h`` and ``ESP8266HTTPClient.h`` instead. Comment and uncomment based on your microcontroller.
- ![ESP wifi library](https://github.com/black0803/spotify-esp-display/blob/main/img/library-option.png?raw=true) 
+ ![ESP wifi library](https://github.com/black0803/spotify-esp-display/blob/main/img/library-option.PNG?raw=true) 
  - Compile and Upload binary to ESP32 or ESP8266 based on your microcontroller.
  - Adjust LCD to be on connected to the I2C interface.
  - Start the ESP
