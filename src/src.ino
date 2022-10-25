@@ -1,10 +1,10 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <ArduinoJson.h>
-// #include <WiFi.h>
-// #include <HTTPClient.h>
-#include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+// #include <ESP8266WiFi.h>
+// #include <ESP8266HTTPClient.h>
 #include "env.h"
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
