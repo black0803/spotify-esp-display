@@ -31,6 +31,7 @@
 
  ### Wokwi Preview:
  You can view the ESP32 mockup via: https://wokwi.com/projects/346513317585486418
+
  Querying for user ``nobita``, you can see my currently playing song on the wokwi simulation (if I am playing one). Some minor change on the lcd library to be compatible with what wokwi provides.
 
   ### (Planned) Future Improvements:
