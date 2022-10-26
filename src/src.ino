@@ -90,6 +90,7 @@ void sendHTTP(){
       HTTPClient http;
       http.useHTTP10(true);
       http.begin(espClient, WEB_SERVER);
+      http.setTimeout(15000); // increasee timeout timer to 5 sec, important because
       // Specify content-type header
       http.addHeader("Content-Type", "application/x-www-form-urlencoded");
       // Data to send with HTTP POST
@@ -104,6 +105,7 @@ void sendHTTP(){
       if (httpResponseCode == 200) {
         deserializeJson(doc, http.getStream());
         res = fetch_variable();
+        Serial.println(var.api_response);
         Serial.println(var.status);
         Serial.println(var.song_title);
         Serial.println(var.timer);
@@ -149,13 +151,13 @@ void update_display(){
 }
 String artist;
 void set_text_l1(){
-  if (httpResponseCode != 200){
+  if (httpResponseCode != 200 && var.song_title != ""){
     line1timer = 1000;
     songTimer = 0;
     line1 = "Not Connected";
     return;
   }
-  if (var.api_response != 200){
+  if (var.api_response == 204){
     line1timer = 1000;
     songTimer = 0;
     line1 = "Not Connected";
@@ -208,12 +210,12 @@ void set_text_l1(){
 }
 String song;
 void set_text_l2(){
-  if (httpResponseCode != 200){
+  if (httpResponseCode != 200 && var.song_title != ""){
     line2timer = 1000;
     line2 = "To Local Server";
     return;     
   }
-  if (var.api_response != 200){
+  if (var.api_response == 204){
     line2timer = 1000;
     line2 = "To Spotify";
     return; 
