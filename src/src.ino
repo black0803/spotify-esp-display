@@ -33,8 +33,7 @@ struct api_data {
     song_title = "";
     status = "";
   }
-}var;
-
+}var, prev;
 
 //arduino main code
 void setup() {
@@ -45,9 +44,12 @@ void setup() {
   //WiFi.mode(WIFI_STA);
   WiFi.begin(SSID, PASSWORD);
   Serial.println("Connecting");
-  while (WiFi.status() != WL_CONNECTED) {
+  int status = WiFi.waitForConnectResult();
+  while (status != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    WiFi.begin(SSID, PASSWORD);
+    status = WiFi.waitForConnectResult();
   }
   Serial.println("");
   Serial.print("Connected to WiFi network with IP Address: ");
@@ -118,6 +120,7 @@ void sendHTTP(){
 
 // Json data related function
 bool fetch_variable() {
+  prev = var;
   var.api_response = doc["api_response"];
   if (var.api_response != 200) return 1;
   var.timer = doc["timer"];
@@ -136,10 +139,12 @@ bool fetch_variable() {
 
 // LCD related function
 void update_display(){
-  lcd.clear();
+  // lcd.clear();
   lcd.setCursor(0,0);
+  line1 = fillLine(line1);
   lcd.print(line1);
   lcd.setCursor(0,1);
+  line2 = fillLine(line2);
   lcd.print(line2);
 }
 String artist;
@@ -166,6 +171,9 @@ void set_text_l1(){
     line1timer = 1000;
     line1 = "PLAY - " + var.artists;
     return;
+  }
+  if (var.song_title != prev.song_title){
+      state_l1 = 0;
   }
   switch(state_l1){
     case 0:
@@ -220,6 +228,9 @@ void set_text_l2(){
     line2 = var.song_title;
     return;
   }
+  if (var.song_title != prev.song_title){
+      state_l2 = 0;
+  }
   switch(state_l2){
     case 0:
       line2timer = 3000;
@@ -250,4 +261,12 @@ void set_text_l2(){
       state_l2 = 0;
       break;
   }
+}
+
+String fillLine(String line){
+  String out = line;
+  for (int i = line.length()-1; i <= 17; i++){
+    out += " ";
+  }
+  return out;
 }
