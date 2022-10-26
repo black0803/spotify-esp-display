@@ -34,6 +34,10 @@
 
  Querying for user ``nobita``, you can see my currently playing song on the wokwi simulation (if I am playing one). Some minor change on the lcd library to be compatible with what wokwi provides.
 
+ ### Product Preview:
+ ![LCD Display](https://github.com/black0803/spotify-esp-display/blob/main/img/display.jpg?raw=true)  
+ This is how the display will look if the ESP32 is connected to the middleware.
+
   ### (Planned) Future Improvements:
  - Showing the song duration and current progress of the song. I haven't consider how things will be shown on the LCD as currently it already occupies the whole 16x2 slot as is. However, it is possible to implement this and I will try to do it as well.
 
